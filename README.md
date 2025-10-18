@@ -1,7 +1,15 @@
 # 🛒 Sales Management System
+Bai tap lon Mini project
 
 Ứng dụng Website Bán Hàng được thiết kế và lập trình dựa trên sơ đồ cơ sở dữ liệu cho sẵn, bao gồm ba phần chính: **Khách hàng**, **Nhân viên**, và **Quản trị viên (Admin)**.
 Dự án được xây dựng theo mô hình **Full-stack CRUD** sử dụng **Node.js + Express + MySQL + HTML/CSS/JS**.
+
+---
+
+## 📋 Thông tin sinh viên
+- **Họ tên:** Huỳnh Minh Hải
+- **MSSV:** N18DCCN053
+- **Ngày nộp:** 18/10/2025
 
 ---
 
