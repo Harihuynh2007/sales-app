@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Tổng quan</h2>
+<div id="stats"></div>
+<script>
+fetch('http://localhost:3000/api/dashboard/stats')
+.then(r=>r.json())
+.then(d=>{
+  stats.innerHTML=`
+  <p>Khách hàng: ${d.customers}</p>
+  <p>Đơn hàng: ${d.orders}</p>
+  <p>Sản phẩm: ${d.products}</p>
+  <p>Doanh thu: ${d.revenue}₫</p>`
+})
+</script>
+</body>
+</html>

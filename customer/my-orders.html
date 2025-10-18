@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Đơn hàng của tôi</h2>
+<table id="tb"></table>
+<script>
+fetch('http://localhost:3000/api/customers/103/orders')
+.then(r=>r.json()).then(d=>{
+  tb.innerHTML=d.map(o=>`
+  <tr><td>${o.orderNumber}</td>
+  <td>${o.orderDate.slice(0,10)}</td>
+  <td>${o.status}</td>
+  <td>${o.totalAmount}</td></tr>`).join('')
+})
+</script>
+</body>
+</html>

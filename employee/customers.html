@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Khách hàng</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Quản lý khách hàng</h2>
+<form id="f">
+  <input id="name" placeholder="Tên khách hàng" required>
+  <button>Thêm</button>
+</form>
+<table id="tb"></table>
+<script>
+function load(){
+  fetch('http://localhost:3000/api/customers')
+  .then(r=>r.json())
+  .then(d=>tb.innerHTML=d.map(c=>`
+  <tr>
+    <td>${c.customerNumber}</td>
+    <td>${c.customerName}</td>
+    <td>${c.phone}</td>
+    <td><button onclick="del(${c.customerNumber})">Xóa</button></td>
+  </tr>`).join(''))
+}
+f.onsubmit=e=>{
+  e.preventDefault()
+  fetch('http://localhost:3000/api/customers',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      customerName:name.value,
+      contactLastName:'',
+      contactFirstName:'',
+      phone:'',
+      addressLine1:'',
+      addressLine2:'',
+      city:'',
+      state:'',
+      postalCode:'',
+      country:'VN',
+      salesRepEmployeeNumber:null,
+      creditLimit:0
+    })
+  }).then(()=>{name.value='';load()})
+}
+function del(id){
+  fetch('http://localhost:3000/api/customers/'+id,{method:'DELETE'}).then(load)
+}
+load()
+</script>
+</body>
+</html>

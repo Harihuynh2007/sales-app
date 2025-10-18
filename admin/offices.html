@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi nhánh</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Quản lý chi nhánh</h2>
+<form id="f">
+  <input id="city" placeholder="Thành phố" required>
+  <input id="phone" placeholder="Điện thoại" required>
+  <button>Thêm</button>
+</form>
+<table id="tb"></table>
+<script>
+function load(){
+  fetch('http://localhost:3000/api/offices')
+  .then(r=>r.json())
+  .then(d=>tb.innerHTML=d.map(o=>`
+  <tr>
+    <td>${o.officeCode}</td>
+    <td>${o.city}</td>
+    <td>${o.phone}</td>
+    <td><button onclick="del(${o.officeCode})">Xóa</button></td>
+  </tr>`).join(''))
+}
+f.onsubmit=e=>{
+  e.preventDefault()
+  fetch('http://localhost:3000/api/offices',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      city:city.value,
+      phone:phone.value,
+      addressLine1:'',
+      addressLine2:'',
+      state:'',
+      country:'VN',
+      postalCode:'',
+      territory:'Asia'
+    })
+  }).then(()=>{city.value=phone.value='';load()})
+}
+function del(id){
+  fetch('http://localhost:3000/api/offices/'+id,{method:'DELETE'}).then(load)
+}
+load()
+</script>
+</body>
+</html>

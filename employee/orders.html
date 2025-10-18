@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Quản lý đơn hàng</h2>
+<table id="tb"></table>
+<script>
+fetch('http://localhost:3000/api/orders')
+.then(r=>r.json())
+.then(d=>{
+  tb.innerHTML=d.map(o=>`
+  <tr>
+    <td>${o.orderNumber}</td>
+    <td>${o.customerName}</td>
+    <td>${o.orderDate.slice(0,10)}</td>
+    <td>${o.status}</td>
+    <td><button onclick="upd(${o.orderNumber})">Cập nhật</button></td>
+  </tr>`).join('')
+})
+function upd(id){
+  fetch('http://localhost:3000/api/orders/'+id,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({status:'Shipped'})
+  }).then(()=>location.reload())
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Giỏ hàng</h2>
+<table id="tb"></table>
+<h3 id="total"></h3>
+<a href="checkout.html">Thanh toán</a>
+<script>
+function render(){
+  let c=JSON.parse(localStorage.getItem('cart')||'[]')
+  tb.innerHTML=c.map((i,x)=>`
+  <tr><td>${i.name}</td><td>${i.qty}</td>
+  <td>${i.price}</td>
+  <td>${i.price*i.qty}</td>
+  <td><button onclick="del(${x})">X</button></td></tr>`).join('')
+  total.textContent='Tổng: '+c.reduce((t,i)=>t+i.price*i.qty,0)+'₫'
+}
+function del(i){
+  let c=JSON.parse(localStorage.getItem('cart')||'[]')
+  c.splice(i,1);localStorage.setItem('cart',JSON.stringify(c));render()
+}
+render()
+</script>
+</body>
+</html>

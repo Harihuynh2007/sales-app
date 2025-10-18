@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Nhân viên</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<h2>Quản lý nhân viên</h2>
+<form id="f">
+  <input id="lname" placeholder="Họ" required>
+  <input id="fname" placeholder="Tên" required>
+  <button>Thêm</button>
+</form>
+<table id="tb"></table>
+<script>
+function load(){
+  fetch('http://localhost:3000/api/employees')
+  .then(r=>r.json())
+  .then(d=>tb.innerHTML=d.map(e=>`
+  <tr>
+    <td>${e.employeeNumber}</td>
+    <td>${e.lastName} ${e.firstName}</td>
+    <td>${e.email}</td>
+    <td><button onclick="del(${e.employeeNumber})">Xóa</button></td>
+  </tr>`).join(''))
+}
+f.onsubmit=e=>{
+  e.preventDefault()
+  fetch('http://localhost:3000/api/employees',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      lastName:lname.value,
+      firstName:fname.value,
+      extension:'',
+      email:'',
+      officeCode:1,
+      reportsTo:null,
+      jobTitle:'Sales Rep'
+    })
+  }).then(()=>{lname.value=fname.value='';load()})
+}
+function del(id){
+  fetch('http://localhost:3000/api/employees/'+id,{method:'DELETE'}).then(load)
+}
+load()
+</script>
+</body>
+</html>
