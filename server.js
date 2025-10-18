@@ -292,6 +292,32 @@ app.put('/api/orders/:id', verifyToken, checkRole('Admin', 'Sales'), (req, res) 
   });
 });
 
+// server.js (sau phần /api/orders)
+app.get("/api/customers/:id/orders", verifyToken, (req, res) => {
+  const q = `
+    SELECT o.*, 
+    (SELECT SUM(quantityOrdered * priceEach) 
+     FROM orderdetails WHERE orderNumber=o.orderNumber) AS totalAmount
+    FROM orders o WHERE o.customerNumber=? ORDER BY o.orderNumber DESC`;
+  db.query(q, [req.params.id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get("/api/orders/:id/details", verifyToken, (req, res) => {
+  const q = `
+    SELECT p.productName, od.quantityOrdered, od.priceEach
+    FROM orderdetails od 
+    JOIN products p ON od.productCode=p.productCode
+    WHERE od.orderNumber=?`;
+  db.query(q, [req.params.id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+
 // ====================== PAYMENTS ======================
 app.get('/api/payments', verifyToken, checkRole('Admin', 'Sales'), (req, res) => {
   const query = `SELECT p.*, c.customerName FROM payments p

@@ -1,178 +1,176 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sản phẩm</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-    }
-    header {
-      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-      color: white;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-    }
-    header input {
-      padding: 8px 10px;
-      border: none;
-      border-radius: 6px;
-      width: 220px;
-      font-size: 14px;
-    }
-    main {
-      padding: 30px;
-      max-width: 1300px;
-      margin: auto;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      padding: 20px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-    .card h3 {
-      margin: 0 0 6px;
-      font-size: 17px;
-      color: #111827;
-      font-weight: 600;
-    }
-    .card p {
-      margin: 3px 0;
-      font-size: 14px;
-      color: #4b5563;
-    }
-    .price {
-      font-weight: bold;
-      color: #2563eb;
-    }
-    .stock {
-      color: #059669;
-      font-weight: 500;
-    }
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 14px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      color: white;
-      margin-top: 10px;
-      transition: 0.2s;
-    }
-    button:hover {
-      opacity: 0.9;
-      transform: scale(1.03);
-    }
-
-    nav a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sản phẩm</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f5f7fa;
+        margin: 0;
+      }
       header {
-        flex-direction: column;
-        gap: 8px;
+        background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+        color: white;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
       }
       header input {
-        width: 100%;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 6px;
+        width: 220px;
+        font-size: 14px;
       }
-    }
-
-    
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Sản phẩm</h1>
-    <nav>
-      <a href="index.html">Trang chủ</a>
-      <a href="cart.html">Giỏ hàng</a>
-      <a href="orders.html">Đơn hàng</a>
-      <a href="profile.html">Hồ sơ</a>
-      <a href="login.html">Đăng nhập</a>
-    </nav>
-  </header>
-
-  <main>
-    <div id="productList" class="grid"></div>
-  </main>
-
-  <script src="assets/js/api.js"></script>
-  <script>
-    const productList = document.getElementById("productList");
-    const searchBox = document.getElementById("searchBox");
-
-    async function loadProducts(keyword = "") {
-      productList.innerHTML = "";
-      try {
-        const data = await apiRequest(`/products${keyword ? `?search=${keyword}` : ""}`);
-        data.forEach(p => {
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            <div>
-              <h3>${p.productName}</h3>
-              <p>Hãng: ${p.productVendor}</p>
-              <p class="price">Giá: ${p.MSRP.toLocaleString()}₫</p>
-              <p class="stock">Còn: ${p.quantityInStock}</p>
-            </div>
-            <button onclick="addToCart('${p.productCode}','${p.productName}',${p.MSRP})">Thêm vào giỏ</button>
-          `;
-          productList.appendChild(card);
-        });
-      } catch (err) {
-        productList.innerHTML = `<p style="color:red;text-align:center;">${err.message}</p>`;
+      main {
+        padding: 30px;
+        max-width: 1300px;
+        margin: auto;
       }
-    }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 17px;
+        color: #111827;
+        font-weight: 600;
+      }
+      .card p {
+        margin: 3px 0;
+        font-size: 14px;
+        color: #4b5563;
+      }
+      .price {
+        font-weight: bold;
+        color: #2563eb;
+      }
+      .stock {
+        color: #059669;
+        font-weight: 500;
+      }
+      button {
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        background: linear-gradient(135deg, #3b82f6, #06b6d4);
+        color: white;
+        margin-top: 10px;
+        transition: 0.2s;
+      }
+      button:hover {
+        opacity: 0.9;
+        transform: scale(1.03);
+      }
+      nav a {
+        color: white;
+        margin-left: 20px;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 600px) {
+        header {
+          flex-direction: column;
+          gap: 8px;
+        }
+        header input {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Sản phẩm</h1>
+      <input id="searchBox" placeholder="Tìm sản phẩm..." />
+      <nav>
+        <a href="./index.html">Trang chủ</a>
+        <a href="./a/cart.html">Giỏ hàng</a>
+        <a href="./a/orders.html">Đơn hàng</a>
+        <a href="./a/profile.html">Hồ sơ</a>
+        <a href="./a/login.html">Đăng nhập</a>
+      </nav>
+    </header>
 
-    function addToCart(code, name, price) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const item = cart.find(i => i.code === code);
-      if (item) item.qty += 1;
-      else cart.push({ code, name, price, qty: 1 });
-      localStorage.setItem("cart", JSON.stringify(cart));
-      alert("Đã thêm vào giỏ hàng");
-    }
+    <main>
+      <div id="productList" class="grid"></div>
+    </main>
 
-    searchBox.addEventListener("input", e => {
-      const keyword = e.target.value.trim();
-      loadProducts(keyword);
-    });
+    <script src="assets/js/api.js"></script>
+    <script>
+      const productList = document.getElementById("productList");
+      const searchBox = document.getElementById("searchBox");
 
-    loadProducts();
-  </script>
-</body>
+      async function loadProducts(keyword = "") {
+        productList.innerHTML = "";
+        try {
+          const data = await apiRequest(
+            `/products${keyword ? `?search=${keyword}` : ""}`
+          );
+          data.forEach((p) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <div>
+                <h3>${p.productName}</h3>
+                <p>Hãng: ${p.productVendor}</p>
+                <p class="price">Giá: ${p.MSRP.toLocaleString()}₫</p>
+                <p class="stock">Còn: ${p.quantityInStock}</p>
+              </div>
+              <button onclick="addToCart('${p.productCode}','${p.productName}',${p.MSRP})">Thêm vào giỏ</button>
+            `;
+            productList.appendChild(card);
+          });
+        } catch (err) {
+          productList.innerHTML = `<p style="color:red;text-align:center;">${err.message}</p>`;
+        }
+      }
+
+      function addToCart(code, name, price) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const item = cart.find((i) => i.code === code);
+        if (item) item.qty += 1;
+        else cart.push({ code, name, price, qty: 1 });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert("Đã thêm vào giỏ hàng");
+      }
+
+      searchBox.addEventListener("input", (e) => {
+        const keyword = e.target.value.trim();
+        loadProducts(keyword);
+      });
+
+      loadProducts();
+    </script>
+  </body>
 </html>

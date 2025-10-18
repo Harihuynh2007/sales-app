@@ -11,7 +11,7 @@ async function apiRequest(endpoint, method = "GET", data = null, auth = false) {
   if (data) options.body = JSON.stringify(data);
 
   const res = await fetch(`${API_BASE}${endpoint}`, options);
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error || "Lỗi không xác định");
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
   return json;
 }
