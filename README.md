@@ -104,7 +104,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   port: 3306,
   user: 'root',
-  password: 'your_password',
+  password: '123456',
   database: 'sales_management'
 });
 ```
@@ -172,13 +172,13 @@ Database connected
 
 ## 📊 7. Đánh giá theo yêu cầu đề bài
 
-| Hạng mục                              | Mức hoàn thiện | Ghi chú                               |
+| Hạng mục                              | Mức hoàn thiện |  chú                               |
 | ------------------------------------- | -------------- | ------------------------------------- |
-| Thiết kế CSDL chuẩn hóa               | ✅ 100%         | Đúng 8 bảng trong sơ đồ               |
-| Kết nối Database + Backend + Frontend | ✅ 100%         | Hoạt động tốt qua Fetch API           |
-| CRUD (thêm, sửa, xóa, xem)            | ✅ 95%          | Đủ chức năng chính                    |
-| Giao diện người dùng                  | ✅ 90%          | Đơn giản, dễ chấm điểm                |
-| Phần nhân viên & admin                | ✅ 100%         | Đầy đủ dashboard và báo cáo           |
+| Thiết kế CSDL chuẩn hóa               | ✅ 100%         |  đồ               |
+| Kết nối Database + Backend + Frontend | ✅ 100%         |  Fetch API           |
+| CRUD (thêm, sửa, xóa, xem)            | ✅ 95%          |  chính                    |
+| Giao diện người dùng                  | ✅ 90%          |  điểm                |
+| Phần nhân viên & admin                | ✅ 100%         |  và báo cáo           |
 | Tổng thể                              | 🌟 **9/10**    | Đạt chuẩn lab và có thể mở rộng đồ án |
 
 ---
