@@ -4,27 +4,31 @@
 
 ## 📋 YÊU CẦU HỆ THỐNG
 
-- Node.js (v14 trở lên)
-- MySQL Server (hoặc XAMPP/WAMP)
-- Trình duyệt web hiện đại
+- Node.js (v14 trở lên) - [Download](https://nodejs.org/)
+- MySQL Server - [Download](https://dev.mysql.com/downloads/mysql/)
+- Trình duyệt web hiện đại (Chrome, Firefox, Edge)
 
 ## 🚀 HƯỚNG DẪN CÀI ĐẶT
 
 ### Bước 1: Tạo Database
 
+**Cách 1: Dùng MySQL Command Line**
 ```bash
-# Mở MySQL Command Line hoặc phpMyAdmin
 mysql -u root -p
-
-# Import file SQL
 source database/sales_management.sql
+exit
 ```
 
-**Hoặc dùng phpMyAdmin:**
-1. Mở http://localhost/phpmyadmin
-2. Click "Import"
+**Cách 2: Dùng MySQL Workbench**
+1. Mở MySQL Workbench
+2. File → Run SQL Script
 3. Chọn file `database/sales_management.sql`
-4. Click "Go"
+4. Click "Run"
+
+**Cách 3: Dùng Terminal**
+```bash
+mysql -u root -p < database/sales_management.sql
+```
 
 ### Bước 2: Cài đặt Dependencies
 
