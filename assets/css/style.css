@@ -1,0 +1,148 @@
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f8fafc;
+  color: #222;
+  line-height: 1.5;
+  padding: 20px;
+}
+
+/* Navbar */
+header nav {
+  display: flex;
+  gap: 16px;
+  background: #3b82f6;
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Tiêu đề trang */
+h1, h2 {
+  margin: 24px 0 16px;
+  color: #0f172a;
+}
+
+/* Lưới sản phẩm */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.card h3, .card h4 {
+  color: #1e293b;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.card a, .card button {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.card a:hover, .card button:hover {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+}
+
+/* Bảng dữ liệu */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+td, th {
+  border: 1px solid #cbd5e1;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background: #e2e8f0;
+}
+
+/* Form */
+form {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+input, select, button {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+button {
+  background: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+/* Tổng tiền, thông báo */
+h3, #total, #msg {
+  margin-top: 20px;
+  color: #1e3a8a;
+  font-weight: bold;
+}
+
+/* Layout responsive nhẹ */
+@media (max-width: 600px) {
+  header nav {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
