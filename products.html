@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Sản Phẩm</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { background: #2c3e50; color: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .header h1 { font-size: 24px; }
+        .nav { display: flex; gap: 10px; margin-top: 10px; }
+        .nav a { color: white; text-decoration: none; padding: 8px 16px; background: #34495e; border-radius: 4px; }
+        .nav a:hover { background: #1abc9c; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 5px; font-weight: 600; color: #2c3e50; }
+        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+        .full-width { grid-column: 1 / -1; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #2ecc71; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn:hover { opacity: 0.9; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background: #34495e; color: white; font-weight: 600; }
+        table tr:hover { background: #f8f9fa; }
+        .actions { display: flex; gap: 5px; }
+        .actions button { padding: 6px 12px; font-size: 12px; }
+        .alert { padding: 12px; border-radius: 4px; margin-bottom: 15px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Hệ Thống Quản Lý Bán Hàng</h1>
+            <div class="nav">
+                <a href="products.html">Sản Phẩm</a>
+                <a href="customers.html">Khách Hàng</a>
+                <a href="orders.html">Đơn Hàng</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📦 Quản Lý Sản Phẩm</h2>
+            <div id="alertBox"></div>
+            
+            <form id="productForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Mã Sản Phẩm *</label>
+                        <input type="text" id="productCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên Sản Phẩm *</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dòng Sản Phẩm *</label>
+                        <select id="productLine" required>
+                            <option value="">Chọn dòng sản phẩm</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quy Mô</label>
+                        <input type="text" id="productScale" value="1:1">
+                    </div>
+                    <div class="form-group">
+                        <label>Nhà Cung Cấp</label>
+                        <input type="text" id="productVendor">
+                    </div>
+                    <div class="form-group">
+                        <label>Số Lượng Tồn *</label>
+                        <input type="number" id="quantityInStock" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Giá Mua (VNĐ) *</label>
+                        <input type="number" id="buyPrice" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Giá Bán (VNĐ) *</label>
+                        <input type="number" id="MSRP" required min="0">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Mô Tả</label>
+                        <textarea id="productDescription"></textarea>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-success">💾 Lưu</button>
+                    <button type="button" class="btn btn-warning" onclick="resetForm()">🔄 Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>📋 Danh Sách Sản Phẩm</h3>
+            <table id="productsTable">
+                <thead>
+                    <tr>
+                        <th>Mã SP</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Dòng SP</th>
+                        <th>Tồn Kho</th>
+                        <th>Giá Mua</th>
+                        <th>Giá Bán</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let isEditMode = false;
+        let currentProductCode = null;
+
+        async function loadProductLines() {
+            const res = await fetch(`${API_URL}/productlines`);
+            const lines = await res.json();
+            const select = document.getElementById('productLine');
+            lines.forEach(line => {
+                const option = document.createElement('option');
+                option.value = line.productLine;
+                option.textContent = line.productLine;
+                select.appendChild(option);
+            });
+        }
+
+        async function loadProducts() {
+            const res = await fetch(`${API_URL}/products`);
+            const products = await res.json();
+            const tbody = document.querySelector('#productsTable tbody');
+            tbody.innerHTML = '';
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${product.productCode}</td>
+                    <td>${product.productName}</td>
+                    <td>${product.productLine}</td>
+                    <td>${product.quantityInStock}</td>
+                    <td>${new Intl.NumberFormat('vi-VN').format(product.buyPrice)} đ</td>
+                    <td>${new Intl.NumberFormat('vi-VN').format(product.MSRP)} đ</td>
+                    <td class="actions">
+                        <button class="btn btn-primary" onclick="editProduct('${product.productCode}')">✏️ Sửa</button>
+                        <button class="btn btn-danger" onclick="deleteProduct('${product.productCode}')">🗑️ Xóa</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                productCode: document.getElementById('productCode').value,
+                productName: document.getElementById('productName').value,
+                productLine: document.getElementById('productLine').value,
+                productScale: document.getElementById('productScale').value,
+                productVendor: document.getElementById('productVendor').value,
+                productDescription: document.getElementById('productDescription').value,
+                quantityInStock: parseInt(document.getElementById('quantityInStock').value),
+                buyPrice: parseFloat(document.getElementById('buyPrice').value),
+                MSRP: parseFloat(document.getElementById('MSRP').value)
+            };
+
+            try {
+                let res;
+                if (isEditMode) {
+                    res = await fetch(`${API_URL}/products/${currentProductCode}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    res = await fetch(`${API_URL}/products`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                }
+                const result = await res.json();
+                showAlert(result.message, 'success');
+                resetForm();
+                loadProducts();
+            } catch (error) {
+                showAlert('Có lỗi xảy ra: ' + error.message, 'error');
+            }
+        });
+
+        async function editProduct(code) {
+            const res = await fetch(`${API_URL}/products/${code}`);
+            const product = await res.json();
+            document.getElementById('productCode').value = product.productCode;
+            document.getElementById('productCode').readOnly = true;
+            document.getElementById('productName').value = product.productName;
+            document.getElementById('productLine').value = product.productLine;
+            document.getElementById('productScale').value = product.productScale;
+            document.getElementById('productVendor').value = product.productVendor;
+            document.getElementById('productDescription').value = product.productDescription;
+            document.getElementById('quantityInStock').value = product.quantityInStock;
+            document.getElementById('buyPrice').value = product.buyPrice;
+            document.getElementById('MSRP').value = product.MSRP;
+            isEditMode = true;
+            currentProductCode = code;
+            window.scrollTo(0, 0);
+        }
+
+        async function deleteProduct(code) {
+            if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
+            try {
+                const res = await fetch(`${API_URL}/products/${code}`, { method: 'DELETE' });
+                const result = await res.json();
+                showAlert(result.message, 'success');
+                loadProducts();
+            } catch (error) {
+                showAlert('Không thể xóa sản phẩm: ' + error.message, 'error');
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productCode').readOnly = false;
+            isEditMode = false;
+            currentProductCode = null;
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertBox.innerHTML = '', 3000);
+        }
+
+        loadProductLines();
+        loadProducts();
+    </script>
+</body>
+</html>
