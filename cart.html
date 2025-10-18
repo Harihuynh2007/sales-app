@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+    th {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+    }
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .remove {
+      background: #ef4444;
+      color: white;
+    }
+    .checkout {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Giỏ hàng của bạn</h2>
+  <table id="cartTable">
+    <thead>
+      <tr>
+        <th>Sản phẩm</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Thành tiền</th>
+        <th>Xóa</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="total" id="totalPrice"></div>
+  <div class="actions">
+    <button class="checkout" onclick="checkout()">Đặt hàng</button>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script>
+    const tbody = document.querySelector("#cartTable tbody");
+    const totalPrice = document.getElementById("totalPrice");
+
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      tbody.innerHTML = "";
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        const row = document.createElement("tr");
+        const sum = item.price * item.qty;
+        total += sum;
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.price.toLocaleString()}₫</td>
+          <td><input type="number" min="1" value="${item.qty}" data-index="${index}" style="width:60px;"></td>
+          <td>${sum.toLocaleString()}₫</td>
+          <td><button class="remove" onclick="removeItem(${index})">X</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      totalPrice.textContent = "Tổng cộng: " + total.toLocaleString() + "₫";
+      document.querySelectorAll('input[type="number"]').forEach(i => {
+        i.addEventListener("change", updateQty);
+      });
+    }
+
+    function updateQty(e) {
+      const index = e.target.dataset.index;
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart[index].qty = parseInt(e.target.value);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function removeItem(index) {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    async function checkout() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) return alert("Giỏ hàng trống");
+
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Vui lòng đăng nhập trước");
+
+      try {
+        const today = new Date().toISOString().split("T")[0];
+        const user = JSON.parse(localStorage.getItem("user"));
+        const orderData = {
+          orderDate: today,
+          requiredDate: today,
+          shippedDate: null,
+          status: "In Process",
+          comments: "",
+          customerNumber: user.id || 101,
+          items: cart.map(c => ({
+            productCode: c.code,
+            quantity: c.qty,
+            price: c.price
+          }))
+        };
+        await apiRequest("/orders", "POST", orderData, true);
+        alert("Đặt hàng thành công!");
+        localStorage.removeItem("cart");
+        window.location.href = "orders.html";
+      } catch (err) {
+        alert("Lỗi: " + err.message);
+      }
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

@@ -2,49 +2,223 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Nhân viên</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý nhân viên</title>
   <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+    th {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+    }
+    .btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+    .add {background: #10b981;}
+    .edit {background: #3b82f6;}
+    .delete {background: #ef4444;}
+    .form-popup {
+      max-width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      z-index: 10;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+  </style>
 </head>
 <body>
-<h2>Quản lý nhân viên</h2>
-<form id="f">
-  <input id="lname" placeholder="Họ" required>
-  <input id="fname" placeholder="Tên" required>
-  <button>Thêm</button>
-</form>
-<table id="tb"></table>
-<script>
-function load(){
-  fetch('http://localhost:3000/api/employees')
-  .then(r=>r.json())
-  .then(d=>tb.innerHTML=d.map(e=>`
-  <tr>
-    <td>${e.employeeNumber}</td>
-    <td>${e.lastName} ${e.firstName}</td>
-    <td>${e.email}</td>
-    <td><button onclick="del(${e.employeeNumber})">Xóa</button></td>
-  </tr>`).join(''))
-}
-f.onsubmit=e=>{
-  e.preventDefault()
-  fetch('http://localhost:3000/api/employees',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      lastName:lname.value,
-      firstName:fname.value,
-      extension:'',
-      email:'',
-      officeCode:1,
-      reportsTo:null,
-      jobTitle:'Sales Rep'
-    })
-  }).then(()=>{lname.value=fname.value='';load()})
-}
-function del(id){
-  fetch('http://localhost:3000/api/employees/'+id,{method:'DELETE'}).then(load)
-}
-load()
-</script>
+  <h2>Quản lý nhân viên</h2>
+  <div style="text-align:right;margin-bottom:10px;">
+    <button class="btn add" onclick="showForm()">+ Thêm nhân viên</button>
+  </div>
+  <table id="employeeTable">
+    <thead>
+      <tr>
+        <th>Mã NV</th>
+        <th>Họ tên</th>
+        <th>Email</th>
+        <th>Chức vụ</th>
+        <th>Chi nhánh</th>
+        <th>Quyền</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="form-popup" id="employeeForm">
+    <h3 id="formTitle">Thêm nhân viên</h3>
+    <input type="hidden" id="employeeNumber">
+    <label>Họ</label>
+    <input type="text" id="lastName">
+    <label>Tên</label>
+    <input type="text" id="firstName">
+    <label>Email</label>
+    <input type="email" id="email">
+    <label>Chức vụ</label>
+    <input type="text" id="jobTitle">
+    <label>Chi nhánh (officeCode)</label>
+    <input type="text" id="officeCode">
+    <label>Quyền (Admin/Sales/Customer)</label>
+    <select id="role">
+      <option>Admin</option>
+      <option>Sales</option>
+      <option>Customer</option>
+    </select>
+    <label>Mật khẩu (khi thêm mới)</label>
+    <input type="password" id="password">
+    <div class="actions" style="margin-top:10px;">
+      <button class="btn add" onclick="saveEmployee()">Lưu</button>
+      <button class="btn delete" onclick="closeForm()">Hủy</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/api.js"></script>
+  <script>
+    const tbody = document.querySelector("#employeeTable tbody");
+    const form = document.getElementById("employeeForm");
+    const formTitle = document.getElementById("formTitle");
+
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!token || !user || user.role !== "Admin") {
+      alert("Chỉ quản trị viên được truy cập");
+      window.location.href = "../login.html";
+    }
+
+    async function loadEmployees() {
+      try {
+        const data = await apiRequest("/employees", "GET", null, true);
+        tbody.innerHTML = "";
+        data.forEach(e => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${e.employeeNumber}</td>
+            <td>${e.lastName} ${e.firstName}</td>
+            <td>${e.email}</td>
+            <td>${e.jobTitle}</td>
+            <td>${e.officeCode}</td>
+            <td>${e.role}</td>
+            <td>
+              <button class="btn edit" onclick="editEmployee(${e.employeeNumber})">Sửa</button>
+              <button class="btn delete" onclick="deleteEmployee(${e.employeeNumber})">Xóa</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        alert("Lỗi tải nhân viên: " + err.message);
+      }
+    }
+
+    function showForm(edit = false) {
+      form.style.display = "block";
+      formTitle.textContent = edit ? "Chỉnh sửa nhân viên" : "Thêm nhân viên";
+    }
+
+    function closeForm() {
+      form.reset();
+      form.style.display = "none";
+    }
+
+    async function saveEmployee() {
+      const body = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        jobTitle: document.getElementById("jobTitle").value,
+        officeCode: document.getElementById("officeCode").value,
+        role: document.getElementById("role").value,
+        password: document.getElementById("password").value
+      };
+      try {
+        const id = document.getElementById("employeeNumber").value;
+        if (id) {
+          await apiRequest(`/employees/${id}`, "PUT", body, true);
+          alert("Cập nhật thành công!");
+        } else {
+          await apiRequest("/auth/register", "POST", body, true);
+          alert("Thêm nhân viên thành công!");
+        }
+        closeForm();
+        loadEmployees();
+      } catch (err) {
+        alert("Lỗi lưu: " + err.message);
+      }
+    }
+
+    async function editEmployee(id) {
+      try {
+        const e = await apiRequest(`/employees/${id}`, "GET", null, true);
+        document.getElementById("employeeNumber").value = e.employeeNumber;
+        document.getElementById("firstName").value = e.firstName;
+        document.getElementById("lastName").value = e.lastName;
+        document.getElementById("email").value = e.email;
+        document.getElementById("jobTitle").value = e.jobTitle;
+        document.getElementById("officeCode").value = e.officeCode;
+        document.getElementById("role").value = e.role;
+        showForm(true);
+      } catch (err) {
+        alert("Lỗi tải dữ liệu: " + err.message);
+      }
+    }
+
+    async function deleteEmployee(id) {
+      if (!confirm("Xóa nhân viên này?")) return;
+      try {
+        await apiRequest(`/employees/${id}`, "DELETE", null, true);
+        alert("Đã xóa nhân viên");
+        loadEmployees();
+      } catch (err) {
+        alert("Lỗi xóa: " + err.message);
+      }
+    }
+
+    loadEmployees();
+  </script>
 </body>
 </html>
