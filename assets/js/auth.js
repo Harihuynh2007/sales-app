@@ -1,3 +1,4 @@
+// ==================== AUTH.JS ====================
 
 if (document.getElementById("loginForm")) {
   document
@@ -17,12 +18,15 @@ if (document.getElementById("loginForm")) {
         localStorage.setItem("token", res.token);
         localStorage.setItem("user", JSON.stringify(res.user));
 
-        // Điều hướng theo vai trò
+        // Đường dẫn frontend (Live Server)
+        const baseURL = "http://127.0.0.1:5500"; // ⚠ sửa theo port FE của bạn
         alert("Đăng nhập thành công!");
+
+        // Điều hướng theo vai trò
         if (res.user.role === "Admin" || res.user.role === "Sales") {
-          window.location.href = "admin/dashboard.html";
+          window.location.href = `${baseURL}/admin/dashboard.html`;
         } else {
-          window.location.href = "index.html";
+          window.location.href = `${baseURL}/index.html`;
         }
       } catch (err) {
         errorMsg.textContent = err.message || "Sai thông tin đăng nhập";
@@ -45,7 +49,6 @@ if (document.getElementById("registerForm")) {
       errorMsg.textContent = "";
 
       try {
-        // Gửi yêu cầu đăng ký
         await apiRequest("/auth/register", "POST", {
           firstName,
           lastName,
