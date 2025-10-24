@@ -1,177 +1,612 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sản phẩm</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <style>
-      body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #f5f7fa;
-        margin: 0;
-      }
-      header {
-        background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-        color: white;
-        padding: 16px 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      header h1 {
-        margin: 0;
-        font-size: 22px;
-        font-weight: 600;
-      }
-      header input {
-        padding: 8px 10px;
-        border: none;
-        border-radius: 6px;
-        width: 220px;
-        font-size: 14px;
-      }
-      main {
-        padding: 30px;
-        max-width: 1300px;
-        margin: auto;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 20px;
-      }
-      .card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        padding: 20px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        display: flex;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trang chủ - Hệ thống bán hàng</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white;
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      max-width: 600px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .search-bar select {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* BANNER */
+    .banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 60px 24px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .banner-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .banner h2 {
+      font-size: 42px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .banner p {
+      font-size: 18px;
+      opacity: 0.95;
+      margin-bottom: 24px;
+    }
+
+    .banner-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background: white;
+      color: #667eea;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .banner-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-bar label {
+      font-weight: 600;
+      color: #555;
+    }
+
+    .filter-bar select,
+    .filter-bar input {
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      min-width: 150px;
+    }
+
+    .filter-bar button {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+
+    .filter-bar button:hover {
+      opacity: 0.9;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 32px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      border-radius: 2px;
+    }
+
+    /* PRODUCT GRID */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 50px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 220px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      color: #3b82f6;
+      position: relative;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #ef4444;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .product-badge.new {
+      background: #10b981;
+    }
+
+    .product-info {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-info h3 {
+      font-size: 17px;
+      color: #111827;
+      margin-bottom: 8px;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .product-vendor {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .product-price {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 8px;
+    }
+
+    .product-stock {
+      font-size: 13px;
+      color: #059669;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .product-actions button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .product-actions button:hover {
+      opacity: 0.9;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6b7280;
+    }
+
+    .empty-state svg {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header-container {
         flex-direction: column;
-        justify-content: space-between;
+        align-items: stretch;
       }
-      .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+
+      .search-bar {
+        max-width: 100%;
+        flex-direction: column;
       }
-      .card h3 {
-        margin: 0 0 6px;
-        font-size: 17px;
-        color: #111827;
-        font-weight: 600;
+
+      nav {
+        justify-content: center;
+        flex-wrap: wrap;
       }
-      .card p {
-        margin: 3px 0;
-        font-size: 14px;
-        color: #4b5563;
+
+      .banner h2 {
+        font-size: 32px;
       }
-      .price {
-        font-weight: bold;
-        color: #2563eb;
+
+      .banner p {
+        font-size: 16px;
       }
-      .stock {
-        color: #059669;
-        font-weight: 500;
+
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
       }
-      button {
-        border: none;
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 14px;
-        cursor: pointer;
-        background: linear-gradient(135deg, #3b82f6, #06b6d4);
-        color: white;
-        margin-top: 10px;
-        transition: 0.2s;
+
+      .filter-bar select,
+      .filter-bar input {
+        width: 100%;
       }
-      button:hover {
-        opacity: 0.9;
-        transform: scale(1.03);
+
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
       }
-      nav a {
-        color: white;
-        margin-left: 20px;
-        text-decoration: none;
-        font-weight: 500;
+    }
+
+    @media (max-width: 480px) {
+      .product-grid {
+        grid-template-columns: 1fr;
       }
-      nav a:hover {
-        text-decoration: underline;
-      }
-      @media (max-width: 600px) {
-        header {
-          flex-direction: column;
-          gap: 8px;
-        }
-        header input {
-          width: 100%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Sản phẩm</h1>
-      <input id="searchBox" placeholder="Tìm sản phẩm..." />
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <h1>🛒 Cửa hàng</h1>
+      <div class="search-bar">
+        <input type="text" id="searchBox" placeholder="Tìm kiếm sản phẩm..." />
+        <select id="lineFilter">
+          <option value="">Tất cả danh mục</option>
+        </select>
+      </div>
       <nav>
         <a href="./index.html">Trang chủ</a>
-        <a href="./a/cart.html">Giỏ hàng</a>
-        <a href="./a/orders.html">Đơn hàng</a>
-        <a href="./a/profile.html">Hồ sơ</a>
-        <a href="./a/login.html">Đăng nhập</a>
+        <a href="./a/cart.html">🛒 Giỏ hàng</a>
+        <a href="./a/orders.html">📦 Đơn hàng</a>
+        <a href="./a/profile.html">👤 Hồ sơ</a>
+        <a href="./a/login.html" id="authLink">Đăng nhập</a>
       </nav>
-    </header>
+    </div>
+  </header>
 
-    <main>
-      <div id="productList" class="grid"></div>
-    </main>
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner-content">
+      <h2>🎉 Khuyến mãi lớn cuối năm</h2>
+      <p>Giảm giá lên đến 50% cho tất cả sản phẩm điện tử. Miễn phí vận chuyển toàn quốc!</p>
+      <a href="#products" class="banner-btn">Mua ngay</a>
+    </div>
+  </div>
 
-    <script src="../assets//js/api.js"></script>
-    <script src="../assets/js/auth.js"></script>
-    <script>
-      const productList = document.getElementById("productList");
-      const searchBox = document.getElementById("searchBox");
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <label>Bộ lọc:</label>
+      <select id="vendorFilter">
+        <option value="">Tất cả nhà cung cấp</option>
+      </select>
+      <select id="priceFilter">
+        <option value="">Tất cả giá</option>
+        <option value="0-1000000">Dưới 1 triệu</option>
+        <option value="1000000-5000000">1-5 triệu</option>
+        <option value="5000000-10000000">5-10 triệu</option>
+        <option value="10000000-50000000">10-50 triệu</option>
+        <option value="50000000-999999999">Trên 50 triệu</option>
+      </select>
+      <select id="stockFilter">
+        <option value="">Tất cả tồn kho</option>
+        <option value="instock">Còn hàng</option>
+        <option value="lowstock">Sắp hết (< 20)</option>
+      </select>
+      <button onclick="applyFilters()">Áp dụng</button>
+      <button onclick="resetFilters()" style="background: #6b7280">Đặt lại</button>
+    </div>
 
-      async function loadProducts(keyword = "") {
-        productList.innerHTML = "";
-        try {
-          const data = await apiRequest(
-            `/products${keyword ? `?search=${keyword}` : ""}`
-          );
-          data.forEach((p) => {
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `
-              <div>
-                <h3>${p.productName}</h3>
-                <p>Hãng: ${p.productVendor}</p>
-                <p class="price">Giá: ${p.MSRP.toLocaleString()}₫</p>
-                <p class="stock">Còn: ${p.quantityInStock}</p>
-              </div>
-              <button onclick="addToCart('${p.productCode}','${p.productName}',${p.MSRP})">Thêm vào giỏ</button>
-            `;
-            productList.appendChild(card);
-          });
-        } catch (err) {
-          productList.innerHTML = `<p style="color:red;text-align:center;">${err.message}</p>`;
+    <!-- SẢN PHẨM NỔI BẬT -->
+    <h2 class="section-title">🔥 Sản phẩm nổi bật</h2>
+    <div id="featuredProducts" class="product-grid"></div>
+
+    <!-- SẢN PHẨM MỚI -->
+    <h2 class="section-title">✨ Sản phẩm mới</h2>
+    <div id="newProducts" class="product-grid"></div>
+
+    <!-- TẤT CẢ SẢN PHẨM -->
+    <h2 class="section-title" id="products">📦 Tất cả sản phẩm</h2>
+    <div id="allProducts" class="product-grid"></div>
+  </main>
+
+  <script src="./assets/js/api.js"></script>
+  <script>
+    let allProductsData = [];
+    let productLines = new Set();
+    let vendors = new Set();
+
+    // Check login status
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const authLink = document.getElementById('authLink');
+    if (user) {
+      authLink.textContent = `👋 ${user.name}`;
+      authLink.href = user.role === 'Admin' || user.role === 'Sales' 
+        ? './admin/dashboard.html' 
+        : './a/profile.html';
+    }
+
+    // Load products
+    async function loadProducts() {
+      try {
+        const data = await apiRequest('/products');
+        allProductsData = data;
+
+        // Extract unique values
+        data.forEach(p => {
+          productLines.add(p.productLine);
+          vendors.add(p.productVendor);
+        });
+
+        // Populate filters
+        populateFilter('lineFilter', Array.from(productLines));
+        populateFilter('vendorFilter', Array.from(vendors));
+
+        // Display products
+        displayFeaturedProducts(data.slice(0, 4));
+        displayNewProducts(data.slice(0, 6));
+        displayAllProducts(data);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('allProducts').innerHTML = 
+          `<div class="empty-state"><p style="color:red">${err.message}</p></div>`;
+      }
+    }
+
+    function populateFilter(id, items) {
+      const select = document.getElementById(id);
+      items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
+      });
+    }
+
+    function displayFeaturedProducts(products) {
+      const container = document.getElementById('featuredProducts');
+      container.innerHTML = products.map(p => createProductCard(p, true)).join('');
+    }
+
+    function displayNewProducts(products) {
+      const container = document.getElementById('newProducts');
+      container.innerHTML = products.map(p => createProductCard(p, false, true)).join('');
+    }
+
+    function displayAllProducts(products) {
+      const container = document.getElementById('allProducts');
+      if (products.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>Không tìm thấy sản phẩm nào</p></div>';
+        return;
+      }
+      container.innerHTML = products.map(p => createProductCard(p)).join('');
+    }
+
+    function createProductCard(p, isFeatured = false, isNew = false) {
+      const badge = isFeatured ? '<span class="product-badge">HOT</span>' : 
+                    isNew ? '<span class="product-badge new">MỚI</span>' : '';
+      
+      return `
+        <div class="product-card">
+          <div class="product-image">
+            ${badge}
+            📦
+          </div>
+          <div class="product-info">
+            <h3>${p.productName}</h3>
+            <p class="product-vendor">🏢 ${p.productVendor}</p>
+            <p class="product-price">${p.MSRP.toLocaleString()}₫</p>
+            <p class="product-stock">📦 Còn: ${p.quantityInStock}</p>
+            <div class="product-actions">
+              <button class="btn-secondary" onclick="viewDetail('${p.productCode}')">
+                Chi tiết
+              </button>
+              <button class="btn-primary" onclick="addToCart('${p.productCode}','${p.productName}',${p.MSRP})">
+                Thêm giỏ
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function viewDetail(code) {
+      window.location.href = `./product-detail.html?code=${code}`;
+    }
+
+    function addToCart(code, name, price) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const item = cart.find(i => i.code === code);
+      if (item) {
+        item.qty += 1;
+      } else {
+        cart.push({ code, name, price, qty: 1 });
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert('✅ Đã thêm vào giỏ hàng');
+    }
+
+    // Filters
+    function applyFilters() {
+      const searchText = document.getElementById('searchBox').value.toLowerCase();
+      const line = document.getElementById('lineFilter').value;
+      const vendor = document.getElementById('vendorFilter').value;
+      const priceRange = document.getElementById('priceFilter').value;
+      const stock = document.getElementById('stockFilter').value;
+
+      let filtered = allProductsData.filter(p => {
+        const matchSearch = !searchText || 
+          p.productName.toLowerCase().includes(searchText) ||
+          p.productCode.toLowerCase().includes(searchText);
+        
+        const matchLine = !line || p.productLine === line;
+        const matchVendor = !vendor || p.productVendor === vendor;
+        
+        let matchPrice = true;
+        if (priceRange) {
+          const [min, max] = priceRange.split('-').map(Number);
+          matchPrice = p.MSRP >= min && p.MSRP <= max;
         }
-      }
 
-      function addToCart(code, name, price) {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const item = cart.find((i) => i.code === code);
-        if (item) item.qty += 1;
-        else cart.push({ code, name, price, qty: 1 });
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert("Đã thêm vào giỏ hàng");
-      }
+        let matchStock = true;
+        if (stock === 'instock') matchStock = p.quantityInStock > 0;
+        if (stock === 'lowstock') matchStock = p.quantityInStock < 20 && p.quantityInStock > 0;
 
-      searchBox.addEventListener("input", (e) => {
-        const keyword = e.target.value.trim();
-        loadProducts(keyword);
+        return matchSearch && matchLine && matchVendor && matchPrice && matchStock;
       });
 
-      loadProducts();
-    </script>
-  </body>
+      displayAllProducts(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('searchBox').value = '';
+      document.getElementById('lineFilter').value = '';
+      document.getElementById('vendorFilter').value = '';
+      document.getElementById('priceFilter').value = '';
+      document.getElementById('stockFilter').value = '';
+      displayAllProducts(allProductsData);
+    }
+
+    // Search on type
+    document.getElementById('searchBox').addEventListener('input', applyFilters);
+    document.getElementById('lineFilter').addEventListener('change', applyFilters);
+
+    loadProducts();
+  </script>
+</body>
 </html>
