@@ -4,153 +4,484 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Đơn hàng của tôi</title>
-  <link rel="stylesheet" href="assets/css/style.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
+    * {
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      box-sizing: border-box;
     }
-    h2 {
-      text-align: center;
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7fa;
       color: #333;
     }
-    table {
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white;
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* MAIN */
+    main {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      color: #111827;
+    }
+
+    /* ORDER CARD */
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s;
+    }
+
+    .order-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .order-header {
+      padding: 20px 24px;
+      background: #f9fafb;
+      border-bottom: 2px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .order-header-left {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .order-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .order-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .order-value {
+      font-size: 15px;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .status-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-badge.processing {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.shipped {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-badge.delivered {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.cancelled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .order-body {
+      padding: 24px;
+    }
+
+    .order-total {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 16px;
+    }
+
+    .view-detail-btn {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .view-detail-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* ORDER DETAIL MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 2px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: #f3f4f6;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      transition: background 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .detail-table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
+      margin-top: 16px;
     }
-    th, td {
+
+    .detail-table th,
+    .detail-table td {
       padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .detail-table th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .detail-table tr:hover {
+      background: #f9fafb;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
       text-align: center;
-      border-bottom: 1px solid #eee;
+      padding: 80px 20px;
+      background: white;
+      border-radius: 16px;
     }
-    th {
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      color: white;
+
+    .empty-icon {
+      font-size: 100px;
+      margin-bottom: 24px;
+      opacity: 0.3;
     }
-    button {
-      border: none;
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #3b82f6, #06b6d4);
-      color: white;
+
+    .empty-state h2 {
+      font-size: 24px;
+      color: #6b7280;
+      margin-bottom: 12px;
     }
-    .status {
-      border-radius: 6px;
-      padding: 3px 8px;
-      color: white;
+
+    .empty-state p {
+      color: #9ca3af;
+      margin-bottom: 24px;
     }
-    .Processing {background: #f59e0b;}
-    .Shipped {background: #3b82f6;}
-    .Delivered {background: #10b981;}
-    .Cancelled {background: #ef4444;}
-    .detail-box {
-      margin-top: 20px;
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .detail-box h3 {
-      margin-top: 0;
-      color: #333;
-    }
-    .detail-box table {
-      margin-top: 10px;
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .order-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .order-header-left {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .detail-table {
+        font-size: 14px;
+      }
+
+      .detail-table th,
+      .detail-table td {
+        padding: 8px;
+      }
     }
   </style>
 </head>
 <body>
-  <h2>Đơn hàng của tôi</h2>
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>Mã đơn</th>
-        <th>Ngày đặt</th>
-        <th>Trạng thái</th>
-        <th>Tổng tiền</th>
-        <th>Chi tiết</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <header>
+    <div class="header-container">
+      <h1>📦 Đơn hàng của tôi</h1>
+      <nav>
+        <a href="../index.html">← Trang chủ</a>
+        <a href="cart.html">🛒 Giỏ hàng</a>
+        <a href="profile.html">👤 Hồ sơ</a>
+      </nav>
+    </div>
+  </header>
 
-  <div id="orderDetail" class="detail-box" style="display:none;">
-    <h3>Chi tiết đơn hàng #<span id="orderId"></span></h3>
-    <table id="detailTable">
-      <thead>
-        <tr>
-          <th>Sản phẩm</th>
-          <th>Số lượng</th>
-          <th>Giá</th>
-          <th>Thành tiền</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <main>
+    <h1 class="page-title">Lịch sử đơn hàng</h1>
+    <div id="ordersList" class="orders-list"></div>
+  </main>
+
+  <!-- MODAL CHI TIẾT -->
+  <div id="detailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Chi tiết đơn hàng #<span id="modalOrderId"></span></h2>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <table class="detail-table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Số lượng</th>
+              <th>Đơn giá</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody id="detailTableBody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <script src="assets/js/api.js"></script>
+  <script src="../assets/js/api.js"></script>
   <script>
-    const ordersTable = document.querySelector("#ordersTable tbody");
-    const detailBox = document.getElementById("orderDetail");
-    const detailTable = document.querySelector("#detailTable tbody");
-    const orderIdSpan = document.getElementById("orderId");
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+
+    if (!token || !user) {
+      alert('⚠️ Vui lòng đăng nhập để xem đơn hàng');
+      window.location.href = 'login.html';
+    }
 
     async function loadOrders() {
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!token || !user) {
-        alert("Vui lòng đăng nhập trước");
-        window.location.href = "login.html";
-        return;
-      }
       try {
-        const data = await apiRequest(`/customers/${user.id}/orders`, "GET", null, true);
-        ordersTable.innerHTML = "";
-        data.forEach(o => {
-          const row = document.createElement("tr");
-          const st = o.status.replace(" ", "");
-          row.innerHTML = `
-            <td>${o.orderNumber}</td>
-            <td>${o.orderDate}</td>
-            <td><span class="status ${st}">${o.status}</span></td>
-            <td>${(o.totalAmount || 0).toLocaleString()}₫</td>
-            <td><button onclick="viewDetail(${o.orderNumber})">Xem</button></td>
+        const data = await apiRequest(`/customers/${user.id}/orders`, 'GET', null, true);
+        const ordersList = document.getElementById('ordersList');
+
+        if (data.length === 0) {
+          ordersList.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">📦</div>
+              <h2>Chưa có đơn hàng nào</h2>
+              <p>Bạn chưa đặt đơn hàng nào. Hãy bắt đầu mua sắm!</p>
+              <a href="../index.html" class="view-detail-btn" style="text-decoration: none; display: inline-block;">
+                Mua sắm ngay
+              </a>
+            </div>
           `;
-          ordersTable.appendChild(row);
-        });
+          return;
+        }
+
+        ordersList.innerHTML = data.map(order => {
+          const statusClass = order.status.toLowerCase().replace(' ', '');
+          const statusText = {
+            'inprocess': 'Đang xử lý',
+            'processing': 'Đang xử lý',
+            'shipped': 'Đã gửi hàng',
+            'delivered': 'Đã giao',
+            'cancelled': 'Đã hủy'
+          }[statusClass] || order.status;
+
+          return `
+            <div class="order-card">
+              <div class="order-header">
+                <div class="order-header-left">
+                  <div class="order-info-item">
+                    <span class="order-label">Mã đơn hàng</span>
+                    <span class="order-value">#${order.orderNumber}</span>
+                  </div>
+                  <div class="order-info-item">
+                    <span class="order-label">Ngày đặt</span>
+                    <span class="order-value">${formatDate(order.orderDate)}</span>
+                  </div>
+                  <div class="order-info-item">
+                    <span class="order-label">Trạng thái</span>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="order-body">
+                <div class="order-total">
+                  💰 Tổng tiền: ${(order.totalAmount || 0).toLocaleString()}₫
+                </div>
+                <button class="view-detail-btn" onclick="viewDetail(${order.orderNumber})">
+                  👁️ Xem chi tiết
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
       } catch (err) {
-        ordersTable.innerHTML = `<tr><td colspan="5" style="color:red">${err.message}</td></tr>`;
+        document.getElementById('ordersList').innerHTML = `
+          <div class="empty-state">
+            <p style="color: red;">❌ ${err.message}</p>
+          </div>
+        `;
       }
     }
 
     async function viewDetail(orderId) {
       try {
-        const details = await apiRequest(`/orders/${orderId}/details`, "GET", null, true);
-        orderIdSpan.textContent = orderId;
-        detailTable.innerHTML = "";
-        details.forEach(d => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${d.productName}</td>
-            <td>${d.quantityOrdered}</td>
-            <td>${d.priceEach.toLocaleString()}₫</td>
-            <td>${(d.quantityOrdered * d.priceEach).toLocaleString()}₫</td>
-          `;
-          detailTable.appendChild(tr);
-        });
-        detailBox.style.display = "block";
-        detailBox.scrollIntoView({ behavior: "smooth" });
+        const details = await apiRequest(`/orders/${orderId}/details`, 'GET', null, true);
+        
+        document.getElementById('modalOrderId').textContent = orderId;
+        const tbody = document.getElementById('detailTableBody');
+        
+        tbody.innerHTML = details.map(item => `
+          <tr>
+            <td><strong>${item.productName}</strong></td>
+            <td>${item.quantityOrdered}</td>
+            <td>${item.priceEach.toLocaleString()}₫</td>
+            <td><strong>${(item.quantityOrdered * item.priceEach).toLocaleString()}₫</strong></td>
+          </tr>
+        `).join('');
+
+        // Thêm dòng tổng
+        const total = details.reduce((sum, item) => sum + (item.quantityOrdered * item.priceEach), 0);
+        tbody.innerHTML += `
+          <tr style="background: #f9fafb; font-weight: 700;">
+            <td colspan="3" style="text-align: right;">TỔNG CỘNG:</td>
+            <td style="color: #2563eb; font-size: 18px;">${total.toLocaleString()}₫</td>
+          </tr>
+        `;
+
+        document.getElementById('detailModal').classList.add('active');
       } catch (err) {
-        alert("Lỗi tải chi tiết: " + err.message);
+        alert('❌ Lỗi tải chi tiết: ' + err.message);
       }
     }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Close modal khi click bên ngoài
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'detailModal') {
+        closeModal();
+      }
+    });
 
     loadOrders();
   </script>

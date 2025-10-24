@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sản phẩm</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      color: white;
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .back-btn {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* MAIN */
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .breadcrumb {
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .breadcrumb a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    /* PRODUCT DETAIL */
+    .product-detail {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .product-image-section {
+      padding: 40px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #cffafe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image {
+      font-size: 200px;
+      color: #3b82f6;
+    }
+
+    .product-info-section {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .product-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.2;
+    }
+
+    .product-meta {
+      display: flex;
+      gap: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .product-price {
+      font-size: 42px;
+      font-weight: 700;
+      color: #2563eb;
+      margin: 12px 0;
+    }
+
+    .product-stock {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #d1fae5;
+      color: #059669;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .product-stock.low {
+      background: #fed7aa;
+      color: #ea580c;
+    }
+
+    .product-description {
+      margin-top: 12px;
+    }
+
+    .product-description h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: #374151;
+    }
+
+    .product-description p {
+      line-height: 1.7;
+      color: #4b5563;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .quantity-selector label {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .quantity-selector input {
+      width: 80px;
+      padding: 10px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .action-buttons button {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add-cart {
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      color: white;
+    }
+
+    .btn-buy-now {
+      background: #10b981;
+      color: white;
+    }
+
+    .action-buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .action-buttons button:active {
+      transform: translateY(0);
+    }
+
+    /* PRODUCT SPECS */
+    .product-specs {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 2px solid #e5e7eb;
+    }
+
+    .product-specs h3 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #374151;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+
+    .spec-label {
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .spec-value {
+      color: #111827;
+      font-weight: 500;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 968px) {
+      .product-detail {
+        grid-template-columns: 1fr;
+      }
+
+      .product-image {
+        font-size: 120px;
+      }
+
+      .product-title {
+        font-size: 26px;
+      }
+
+      .product-price {
+        font-size: 34px;
+      }
+
+      .specs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-image-section {
+        padding: 30px;
+      }
+
+      .product-info-section {
+        padding: 24px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .product-meta {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <h1>📦 Chi tiết sản phẩm</h1>
+      <a href="./index.html" class="back-btn">← Quay lại</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="./index.html">Trang chủ</a> / <span id="breadcrumbCategory">Sản phẩm</span> / <span id="breadcrumbName">...</span>
+    </div>
+
+    <div class="product-detail" id="productDetail">
+      <!-- Content will be loaded here -->
+    </div>
+  </main>
+
+  <script src="./assets/js/api.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const productCode = urlParams.get('code');
+
+    if (!productCode) {
+      alert('Không tìm thấy mã sản phẩm');
+      window.location.href = './index.html';
+    }
+
+    async function loadProductDetail() {
+      try {
+        const product = await apiRequest(`/products/${productCode}`);
+        
+        if (!product) {
+          alert('Sản phẩm không tồn tại');
+          window.location.href = './index.html';
+          return;
+        }
+
+        // Update breadcrumb
+        document.getElementById('breadcrumbCategory').textContent = product.productLine;
+        document.getElementById('breadcrumbName').textContent = product.productName;
+
+        // Render product detail
+        const stockClass = product.quantityInStock < 20 ? 'low' : '';
+        const stockText = product.quantityInStock > 0 ? `Còn ${product.quantityInStock} sản phẩm` : 'Hết hàng';
+
+        document.getElementById('productDetail').innerHTML = `
+          <div class="product-image-section">
+            <div class="product-image">📦</div>
+          </div>
+
+          <div class="product-info-section">
+            <h1 class="product-title">${product.productName}</h1>
+
+            <div class="product-meta">
+              <div class="meta-item">
+                <span class="meta-label">Mã sản phẩm</span>
+                <span class="meta-value">${product.productCode}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Danh mục</span>
+                <span class="meta-value">${product.productLine}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Nhà cung cấp</span>
+                <span class="meta-value">${product.productVendor}</span>
+              </div>
+            </div>
+
+            <div class="product-price">${product.MSRP.toLocaleString()}₫</div>
+            <span class="product-stock ${stockClass}">📦 ${stockText}</span>
+
+            <div class="product-description">
+              <h3>Mô tả sản phẩm</h3>
+              <p>${product.productDescription || 'Chưa có mô tả chi tiết.'}</p>
+            </div>
+
+            <div class="quantity-selector">
+              <label>Số lượng:</label>
+              <input type="number" id="quantity" value="1" min="1" max="${product.quantityInStock}">
+            </div>
+
+            <div class="action-buttons">
+              <button class="btn-add-cart" onclick="addToCart()" ${product.quantityInStock === 0 ? 'disabled' : ''}>
+                🛒 Thêm vào giỏ
+              </button>
+              <button class="btn-buy-now" onclick="buyNow()" ${product.quantityInStock === 0 ? 'disabled' : ''}>
+                ⚡ Mua ngay
+              </button>
+            </div>
+
+            <div class="product-specs">
+              <h3>Thông số kỹ thuật</h3>
+              <div class="specs-grid">
+                <div class="spec-item">
+                  <span class="spec-label">Mã sản phẩm</span>
+                  <span class="spec-value">${product.productCode}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Quy cách</span>
+                  <span class="spec-value">${product.productScale || 'N/A'}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Giá nhập</span>
+                  <span class="spec-value">${product.buyPrice.toLocaleString()}₫</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Giá bán</span>
+                  <span class="spec-value">${product.MSRP.toLocaleString()}₫</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Tồn kho</span>
+                  <span class="spec-value">${product.quantityInStock}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Nhà cung cấp</span>
+                  <span class="spec-value">${product.productVendor}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Store product data
+        window.currentProduct = product;
+      } catch (err) {
+        alert('Lỗi tải sản phẩm: ' + err.message);
+        window.location.href = './index.html';
+      }
+    }
+
+    function addToCart() {
+      const qty = parseInt(document.getElementById('quantity').value);
+      const product = window.currentProduct;
+
+      if (!product) return;
+
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(i => i.code === product.productCode);
+
+      if (existingItem) {
+        existingItem.qty += qty;
+      } else {
+        cart.push({
+          code: product.productCode,
+          name: product.productName,
+          price: product.MSRP,
+          qty: qty
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert(`✅ Đã thêm ${qty} sản phẩm vào giỏ hàng!`);
+    }
+
+    function buyNow() {
+      addToCart();
+      window.location.href = './a/cart.html';
+    }
+
+    loadProductDetail();
+  </script>
+</body>
+</html>
