@@ -435,7 +435,10 @@
         // Store product data
         window.currentProduct = product;
       } catch (err) {
-        alert('Lỗi tải sản phẩm: ' + err.message);
+        const message = err.status === 404 
+          ? 'Sản phẩm không tồn tại'
+          : 'Không thể tải sản phẩm. Vui lòng thử lại.';
+        alert(message);
         window.location.href = './index.html';
       }
     }

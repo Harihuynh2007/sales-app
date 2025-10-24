@@ -386,7 +386,7 @@
         }
 
         ordersList.innerHTML = data.map(order => {
-          const statusClass = order.status.toLowerCase().replace(' ', '');
+          const statusClass = order.status.toLowerCase().replaceAll(' ', '');
           const statusText = {
             'inprocess': 'Đang xử lý',
             'processing': 'Đang xử lý',
@@ -425,11 +425,21 @@
           `;
         }).join('');
       } catch (err) {
-        document.getElementById('ordersList').innerHTML = `
-          <div class="empty-state">
-            <p style="color: red;">❌ ${err.message}</p>
-          </div>
-        `;
+        // Avoid inserting untrusted error text as HTML to prevent XSS.
+        const ordersList = document.getElementById('ordersList');
+        // Clear existing content
+        ordersList.innerHTML = '';
+
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+
+        const p = document.createElement('p');
+        p.style.color = 'red';
+        // Use textContent to ensure the error message is treated as plain text
+        p.textContent = `❌ ${err && err.message ? err.message : String(err)}`;
+
+        emptyState.appendChild(p);
+        ordersList.appendChild(emptyState);
       }
     }
 
